@@ -19,6 +19,7 @@ jobs:
 
         - name: Build React App
           run: npm run build
+          working-directory: ./frontend
 
         - name: Deploy to VPS
           env:
