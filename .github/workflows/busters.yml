@@ -17,6 +17,9 @@ jobs:
         - name: Checkout code
           uses: actions/checkout@v2
 
+        - name: Install dependencies
+          run: npm install
+
         - name: Build React App
           run: npm run build
           working-directory: ./frontend
