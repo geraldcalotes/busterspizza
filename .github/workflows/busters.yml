@@ -32,7 +32,7 @@ jobs:
             DEPLOY_PATH: ${{ secrets.DEPLOY_PATH}}
             SSH_PORT: ${{ secrets.SSH_PORT}}
           run:
-           #rsync -avz -e "ssh -p $SSH_PORT" --delete build/ $SERVER_USER@$SERVER_IP:$DEPLOY_PATH
-            scp -P $SSH_PORT -r dist/ $SERVER_USER@$SERVER_IP:$DEPLOY_PATH
+            rsync -avz -e "ssh -p $SSH_PORT" --delete dist/ $SERVER_USER@$SERVER_IP:$DEPLOY_PATH
+           #scp -P $SSH_PORT -r dist/ $SERVER_USER@$SERVER_IP:$DEPLOY_PATH
            #ssh $SERVER_USER@$SERVER_IP "sudo systemctl restart nginx"
           working-directory: ./frontend
