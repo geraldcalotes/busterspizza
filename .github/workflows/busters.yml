@@ -35,3 +35,4 @@ jobs:
            #rsync -avz -e "ssh -p $SSH_PORT" --delete build/ $SERVER_USER@$SERVER_IP:$DEPLOY_PATH
             scp -P $SSH_PORT -r build/ $SERVER_USER@$SERVER_IP:$DEPLOY_PATH
            #ssh $SERVER_USER@$SERVER_IP "sudo systemctl restart nginx"
+          working-directory: ./frontend
