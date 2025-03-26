@@ -47,6 +47,7 @@ jobs:
             DEPLOY_PATH: ${{ secrets.DEPLOY_PATH}}
             SSH_PORT: ${{ secrets.SSH_PORT}}
           run: |
+              mkdir -p ~/.ssh
               ssh-keyscan -p $SSH_PORT -H $SERVER_IP >> ~/.ssh/known_hosts
               echo "$PRIVATE_KEY" > ~/.ssh/id_rsa
               chmod 600 ~/.ssh/id_rsa
