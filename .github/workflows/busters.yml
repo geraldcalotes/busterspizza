@@ -51,6 +51,7 @@ jobs:
               ssh-keyscan -p $SSH_PORT -H $SERVER_IP >> ~/.ssh/known_hosts
               echo "$PRIVATE_KEY" > ~/.ssh/id_rsa
               chmod 600 ~/.ssh/id_rsa
+              echo "$SSH_PORT"
               ssh -P $SSH_PORT $SERVER_USER@$SERVER_IP "mkdir -p ~/.ssh && echo '$PUBLIC_KEY' >> ~/.ssh/authorized_keys"
             
         - name: Deploy to VPS
