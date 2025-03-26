@@ -39,9 +39,9 @@ jobs:
             SSH_PORT: ${{ secrets.SSH_PORT}}
           run: |
               ssh-keyscan -H your-server-ip >> ~/.ssh/known_hosts
-              echo "${{ env.PRIVATE_KEY }}" > ~/.ssh/id_rsa
+              echo "$PRIVATE_KEY" > ~/.ssh/id_rsa
               chmod 600 ~/.ssh/id_rsa
-              ssh -P $SSH_PORT $SERVER_USER@$SERVER_IP "mkdir -p ~/.ssh && echo '${{ env.PUBLIC_KEY }}' >> ~/.ssh/authorized_keys"
+              ssh -P $SSH_PORT $SERVER_USER@$SERVER_IP "mkdir -p ~/.ssh && echo '$PUBLIC_KEY' >> ~/.ssh/authorized_keys"
             
         - name: Deploy to VPS
           env:
