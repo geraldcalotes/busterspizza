@@ -27,6 +27,7 @@ jobs:
 
         - name: Verify dist/ exists
           run: |
+            cd frontend
             ls -la
             echo "Contents of dist folder"
             ls -la dist/
