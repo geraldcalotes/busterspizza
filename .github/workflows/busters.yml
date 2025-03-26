@@ -47,6 +47,17 @@ jobs:
             ssh -p ${{ secrets.SSH_PORT }} ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} \
               "mkdir -p ${{ secrets.DEPLOY_PATH }}"
 
+        - name: Verify remote directory
+          run: |
+              ssh -p ${{ secrets.SSH_PORT }} ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} \
+                "ls -la $(dirname ${{ secrets.DEPLOY_PATH }})"
+    
+        - name: Fix permissions if needed
+          run: |
+              ssh -p ${{ secrets.SSH_PORT }} ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} \
+              "sudo mkdir -p ${{ secrets.DEPLOY_PATH }} && \
+              sudo chown -R ${{ secrets.SERVER_USER }}:${{ secrets.SERVER_USER }} ${{ secrets.DEPLOY_PATH }}"
+                
         - name: Deploy to VPS
           env:
             SERVER_IP: ${{ secrets.SERVER_IP}}
@@ -54,13 +65,10 @@ jobs:
             DEPLOY_PATH: ${{ secrets.DEPLOY_PATH}}
             SSH_PORT: ${{ secrets.SSH_PORT}}
           run: |
-           #rsync -avz -e "ssh -p $SSH_PORT" --delete dist/ $SERVER_USER@$SERVER_IP:$DEPLOY_PATH
-           #scp -P $SSH_PORT -o StrictHostKeyChecking=no  -r dist/ $SERVER_USER@$SERVER_IP:$DEPLOY_PATH
            scp -P ${{ secrets.SSH_PORT }} \
               -o StrictHostKeyChecking=no \
               -r dist/* \
               ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }}:${{ secrets.DEPLOY_PATH}}/
-           #ssh $SERVER_USER@$SERVER_IP "sudo systemctl restart nginx"
           working-directory: ./frontend
 
         - name: Verify remote directory
