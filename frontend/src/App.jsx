@@ -7,6 +7,7 @@ function App() {
     <>
       <div>
          <div class="login-box">
+            <div > <h1> Testing CI/CD Workflow for Frontend </h1></div>
         <div class="login-header">
             <header><img src={logo} alt="Buster's Pizza logo" /></header>
         </div>
