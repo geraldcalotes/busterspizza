@@ -50,7 +50,7 @@ jobs:
           run: |
               mkdir -p ~/.ssh
               ssh-keyscan -p $SSH_PORT -H $SERVER_IP >> ~/.ssh/known_hosts
-              echo "${{ env.PRIVATE_KEY }}" ~/.ssh/id_rsa
+              echo "${{ env.PRIVATE_KEY }}" >  ~/.ssh/id_rsa
               ls -al ~/.ssh  # List files to verify the key is there
               chmod 600 ~/.ssh/id_rsa
               echo "$SSH_PORT"
