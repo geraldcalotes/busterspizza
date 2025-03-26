@@ -53,9 +53,7 @@ jobs:
               chmod 600 ~/.ssh/id_rsa
               echo "$SSH_PORT"
               
-              echo "SERVER_IP is set to: $SERVER_IP"
-              echo "SERVER_USER is set to: $SERVER_USER"
-              ssh -p $SSH_PORT $SERVER_USER@SERVER_ip
+              ssh -p $SSH_PORT $SERVER_USER@SERVER_IP
               #ssh -p $SSH_PORT $SERVER_USER@$SERVER_IP "mkdir -p ~/.ssh && echo '$PUBLIC_KEY' >> ~/.ssh/authorized_keys"
             
         - name: Deploy to VPS
