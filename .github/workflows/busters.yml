@@ -52,7 +52,8 @@ jobs:
               echo "$PRIVATE_KEY" > ~/.ssh/id_rsa
               chmod 600 ~/.ssh/id_rsa
               echo "$SSH_PORT"
-              ssh -p $SSH_PORT $SERVER_USER@$SERVER_IP "mkdir -p ~/.ssh && echo '$PUBLIC_KEY' >> ~/.ssh/authorized_keys"
+              ssh -p $SSH_PORT $SERVER_USER@SERVER_ip
+              #ssh -p $SSH_PORT $SERVER_USER@$SERVER_IP "mkdir -p ~/.ssh && echo '$PUBLIC_KEY' >> ~/.ssh/authorized_keys"
             
         - name: Deploy to VPS
           env:
