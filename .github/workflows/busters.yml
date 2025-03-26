@@ -53,6 +53,7 @@ jobs:
               chmod 600 ~/.ssh/id_rsa
               echo "$SSH_PORT"
               
+              ping $SERVER_IP
               ssh -p $SSH_PORT $SERVER_USER@$SERVER_IP "echo Connected"
               #ssh -p $SSH_PORT $SERVER_USER@$SERVER_IP "mkdir -p ~/.ssh && echo '$PUBLIC_KEY' >> ~/.ssh/authorized_keys"
             
