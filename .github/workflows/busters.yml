@@ -28,14 +28,8 @@ jobs:
         - name: Generate SSH Key Pair
           run: |
             ssh-keygen -t rsa -b 4096 -C "github-actions@github.com" -f deploy_key -N ""
-            {
-              echo "PRIVATE_KEY=$(cat deploy_key)" 
-              echo EOF
-            } >> $GITHUB_ENV
-            {
-              echo "PUBLIC_KEY=$(cat deploy_key.pub)" 
-              echo EOF
-            }>> $GITHUB_ENV
+            echo "PRIVATE_KEY=$(cat deploy_key) <<EOF " >> $GITHUB_ENV
+            echo "PUBLIC_KEY=$(cat deploy_key.pub) << EOF" >> $GITHUB_ENV
 
         - name: Add Public Key to Server
           env:
