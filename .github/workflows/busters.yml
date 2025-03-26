@@ -25,11 +25,24 @@ jobs:
           run: npm run build
           working-directory: ./frontend
 
-        - name: Get SSH Key and set permissions
+        - name: Generate SSH Key Pair
           run: |
-            mkdir -p ~/.ssh
-            echo "${{secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa && chmod 600 ~/.ssh/id_rsa
+            ssh-keygen -t rsa -b 4096 -C "github-actions@github.com" -f deploy_key -N ""
+            echo "PRIVATE_KEY=$(cat deploy_key)" >> $GITHUB_ENV
+            echo "PUBLIC_KEY=$(cat deploy_key.pub)" >> $GITHUB_ENV
 
+        - name: Add Public Key to Server
+          env:
+            SERVER_IP: ${{ secrets.SERVER_IP}}
+            SERVER_USER: ${{ secrets.SERVER_USER}}
+            DEPLOY_PATH: ${{ secrets.DEPLOY_PATH}}
+            SSH_PORT: ${{ secrets.SSH_PORT}}
+          run: |
+              ssh-keyscan -H your-server-ip >> ~/.ssh/known_hosts
+              echo "${{ env.PRIVATE_KEY }}" > ~/.ssh/id_rsa
+              chmod 600 ~/.ssh/id_rsa
+              ssh -P $SSH_PORT $SERVER_USER@$SERVER_IP "mkdir -p ~/.ssh && echo '${{ env.PUBLIC_KEY }}' >> ~/.ssh/authorized_keys"
+            
         - name: Deploy to VPS
           env:
             SERVER_IP: ${{ secrets.SERVER_IP}}
