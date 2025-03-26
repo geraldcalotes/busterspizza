@@ -33,9 +33,14 @@ jobs:
         - name: Test SSH Connection
           run: ssh -p ${{ secrets.SSH_PORT}} -o StrictHostKeyChecking=no ${{secrets.SERVER_USER}}@${{secrets.SERVER_IP}} "echo 'Connected Successfully'"
           
-        - name: Verify build/ exists
-          run: ls -la build/
-
+        - name: Verify dist/ exists
+          run: 
+            echo "Contents of dist folder"
+            ls -la dist/
+            echo "contents of dist/assets:"
+            ls -la dist/assets/
+          
+          
         - name: Deploy to VPS
           env:
             SERVER_IP: ${{ secrets.SERVER_IP}}
