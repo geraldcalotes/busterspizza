@@ -46,14 +46,15 @@ jobs:
             SERVER_USER: ${{ secrets.SERVER_USER}}
             DEPLOY_PATH: ${{ secrets.DEPLOY_PATH}}
             SSH_PORT: ${{ secrets.SSH_PORT}}
+            SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY}}
           run: |
               mkdir -p ~/.ssh
               ssh-keyscan -p $SSH_PORT -H $SERVER_IP >> ~/.ssh/known_hosts
-              echo "$PRIVATE_KEY" > ~/.ssh/id_rsa
+              echo $PRIVATE_KEY > ~/.ssh/id_rsa
               chmod 600 ~/.ssh/id_rsa
               echo "$SSH_PORT"
               
-              ping -c 4 $SERVER_IP
+              #ping -c 4 $SERVER_IP
               ssh -p $SSH_PORT $SERVER_USER@$SERVER_IP "echo Connected"
               #ssh -p $SSH_PORT $SERVER_USER@$SERVER_IP "mkdir -p ~/.ssh && echo '$PUBLIC_KEY' >> ~/.ssh/authorized_keys"
             
