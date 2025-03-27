@@ -1,20 +1,29 @@
 const express = require('express');
 const app = express();
 const cors = require('cors');
+const db = require('./models/db');
 
 // Middleware
 app.use(express.json());
 app.use(cors());
 
 // Branches route
-app.get('/branches', (req, res) => {
-  const branches = [
-    {id: 0, name: 'North'},
-    {id: 1, name: 'South'},
-    {id: 2, name: 'East'},
-    {id: 3, name: 'West'}
-  ];
-  res.json(branches);
+// Route to get all store branches
+app.get('/branches', async (req, res) => {
+  try {
+    const { rows } = await db.query('SELECT * FROM storebranch');
+    res.json({
+      success: true,
+      count: rows.length,
+      data: rows
+    });
+  } catch (err) {
+    console.error('Error fetching store branches:', err);
+    res.status(500).json({
+      success: false,
+      error: 'Failed to fetch store branches'
+    });
+  }
 });
 
 // Start server

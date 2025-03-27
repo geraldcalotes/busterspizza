@@ -1,16 +1,19 @@
 import './App.css';
 import logo from './assets/logo.png';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
-let branches = [
-  {id: 0, name: 'North'},
-  {id: 1, name: 'South'},
-  {id: 2, name: 'East'},  
-  {id: 3, name: 'West'}
-]
+
 
 function App() {
   const [selectedBranch, setSelectedBranch] = useState('');
+const [branches, setBranches] = useState([]);
+
+useEffect(() => {
+  fetch('http://localhost:3001/branches')
+    .then(response => response.json())
+    .then(data => setBranches(data))
+    .catch(error => console.error('Error fetching branches:', error));
+}, []);
 
   return (
     <>
