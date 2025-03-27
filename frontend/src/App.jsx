@@ -6,6 +6,7 @@ function App() {
   return (
     <>
       <div>
+        <div><h1>Welcome to</h1></div>
          <div class="login-box">
         <div class="login-header">
             <header><img src={logo} alt="Buster's Pizza logo" /></header>
