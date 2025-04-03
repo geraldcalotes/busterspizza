@@ -61,6 +61,7 @@ function Login() {
 
   return (
     <div>
+      <h1>testing</h1>
       <form onSubmit={handleSubmit}>
       <div className="login-box">
         <div className="login-header">
@@ -70,6 +71,8 @@ function Login() {
         <div className="input-box">
           <select className="input-field" style={{ height: '50px', padding: '0 15px', marginBottom: '50px',color:'black' }} required>
             <option value="" disabled defaultValue>Select Branch</option>
+            <option value="Red Deer North">Red Deer North</option>
+            <option value="Red Deer South">Red Deer South</option>
             {loading ? (
               <option disabled>Loading branches...</option>
             ) : error ? (
