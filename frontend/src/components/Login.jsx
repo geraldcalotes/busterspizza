@@ -71,6 +71,7 @@ function Login() {
           <select className="input-field" style={{ height: '50px', padding: '0 15px', marginBottom: '50px',color:'black' }} required>
             <option value="" disabled defaultValue>Select Branch</option>
             <option value="Red Deer North">Red Deer North</option>
+            <option value="Red Deer South">Red Deer South</option>
             {loading ? (
               <option disabled>Loading branches...</option>
             ) : error ? (
