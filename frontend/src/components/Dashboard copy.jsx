@@ -1,19 +1,16 @@
-import React, { useEffect, useRef } from "react";
-import "./style.css";
-import {
-  FaGauge,
-  FaUser,
-  FaStore,
-  FaClipboard,
-  FaGear,
-  FaRightFromBracket,
-} from "react-icons/fa6";
-import { useLocation, useParams, Link, Routes, Route } from "react-router-dom";
+import React, { useEffect, useRef } from 'react';
+import './style.css';
+import { 
+  FaGauge, 
+  FaUser, 
+  FaStore, 
+  FaClipboard, 
+  FaGear, 
+  FaRightFromBracket 
+} from 'react-icons/fa6';
+import { useLocation, useParams } from 'react-router-dom';
 
-import Chart from "chart.js/auto";
-import CreateBranch from "./CreateBranch";
-import CreateEmployee from "./CreateEmployee";
-import MainContent from "./MainContent";
+import Chart from 'chart.js/auto';
 
 function Dashboard() {
   const chartRef = useRef(null);
@@ -25,21 +22,21 @@ function Dashboard() {
     // Initialize chart when component mounts
     if (chartRef.current) {
       const chart = new Chart(chartRef.current, {
-        type: "bar",
+        type: 'bar',
         data: {
           labels: ["15,000", "20,000", "40,000", "50,000"],
           datasets: [
             {
               label: "Monthly",
               backgroundColor: "#3e95cd",
-              data: [5000, 7000, 9800, 10000],
-            },
+              data: [5000, 7000, 9800, 10000]
+            }, 
             {
               label: "Yearly",
               backgroundColor: "#8e5ea2",
-              data: [15000, 22000, 25000, 30000],
-            },
-          ],
+              data: [15000, 22000, 25000, 30000]
+            }
+          ]
         },
         options: {
           responsive: true,
@@ -47,10 +44,10 @@ function Dashboard() {
           plugins: {
             title: {
               display: true,
-              text: "Sales Overview",
-            },
-          },
-        },
+              text: 'Sales Overview'
+            }
+          }
+        }
       });
 
       // Cleanup function to destroy chart when component unmounts
@@ -62,7 +59,7 @@ function Dashboard() {
 
   return (
     <div className="dashboard-container">
-      <div className="sidebar">
+    <div className="sidebar">
         <div className="logo"></div>
         <ul className="menu">
           <li className="active">
@@ -73,15 +70,15 @@ function Dashboard() {
           </li>
 
           <li>
-            <Link to="/employee">
+            <a href="#">
               <i class="fa-solid fa-user"></i>
               <span>Create Employee</span>
-            </Link>
+            </a>
           </li>
 
           <li>
             <a href="#">
-              <i class="fa-solid fa-store"></i>
+                <i class="fa-solid fa-store"></i>
               <span>Create Branch</span>
             </a>
           </li>
@@ -113,13 +110,14 @@ function Dashboard() {
         <div className="header--wrapper">
           <div className="header--title">
             <span>Primary</span>
-            <h2>
-              {userData?.username} - {userData?.access_level} Dashboard
-            </h2>
-            {access_label ? <div>Yes it is 1000</div> : <div>Not 10000</div>}
+             <h2>{userData?.username} - {userData?.access_level}   Dashboard</h2>
+            {access_label?
+              (<div>Yes it is 1000</div>) : (<div>Not 10000</div>)
+            }
+             
           </div>
           <p>Admin ID:0001</p>
-        </div>
+        </div> 
 
         <div className="card--container">
           <main className="content px-3 py-4">
@@ -127,7 +125,7 @@ function Dashboard() {
               <div className="mb-3">
                 <h3 className="fw-bold fs-4 mb-3">Summary of Reports</h3>
                 <div className="row">
-                  <div className="col-12 col-md-4">
+                  <div className="col-12 col-md-4"> 
                     <div className="card shadow">
                       <div className="card-body py-4">
                         <h6 className="mb-2 fw-bold">
@@ -142,7 +140,7 @@ function Dashboard() {
                     </div>
                   </div>
 
-                  <div className="col-12 col-md-4">
+                  <div className="col-12 col-md-4"> 
                     <div className="card shadow">
                       <div className="card-body py-4">
                         <h6 className="mb-2 fw-bold">
@@ -157,7 +155,7 @@ function Dashboard() {
                     </div>
                   </div>
 
-                  <div className="col-12 col-md-4">
+                  <div className="col-12 col-md-4"> 
                     <div className="card shadow">
                       <div className="card-body py-4">
                         <h6 className="mb-2 fw-bold">
@@ -241,39 +239,33 @@ function Dashboard() {
               </div>
             </div>
           </main>
+
+          <footer className="footer">
+            <div className="container-fluid">
+              <div className="row text-body-secondary">
+                <div className="col-6 text-start">
+                  <a href="#" className="text-body-secondary">
+                    <strong>Code Trio</strong>
+                  </a>
+                </div>
+                <div className="col-6 text-end text-body-secondary d-none d-md-block">
+                  <ul className="list-inline mb-0">
+                    <li className="list-inline-item">
+                      <a href="#" className="text-body-secondary">Contacts</a>
+                    </li>
+                    <li className="list-inline-item">
+                      <a href="#" className="text-body-secondary">About</a>
+                    </li>
+                    <li className="list-inline-item">
+                      <a href="#" className="text-body-secondary">Terms and Conditions</a>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </footer>
         </div>
       </div>
-
-      <footer className="footer">
-        <div className="container-fluid">
-          <div className="row text-body-secondary">
-            <div className="col-6 text-start">
-              <a href="#" className="text-body-secondary">
-                <strong>Code Trio</strong>
-              </a>
-            </div>
-            <div className="col-6 text-end text-body-secondary d-none d-md-block">
-              <ul className="list-inline mb-0">
-                <li className="list-inline-item">
-                  <a href="#" className="text-body-secondary">
-                    Contacts
-                  </a>
-                </li>
-                <li className="list-inline-item">
-                  <a href="#" className="text-body-secondary">
-                    About
-                  </a>
-                </li>
-                <li className="list-inline-item">
-                  <a href="#" className="text-body-secondary">
-                    Terms and Conditions
-                  </a>
-                </li>
-              </ul>
-            </div>
-          </div>
-        </div>
-      </footer>
     </div>
   );
 }

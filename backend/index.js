@@ -59,7 +59,7 @@ app.post('/login', async (req, res) => {
     // Successful authentication
     res.json({
       success: true,
-      data: {
+      data: {'username':username,
        'access_level':retval 
       }
     });
