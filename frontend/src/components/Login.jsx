@@ -16,6 +16,12 @@ function Login() {
   const [selectedBranch, setSelectedBranch] = useState('');
 
   const navigate = useNavigate();
+  // const userData = {
+  //   id:123,
+  //   name:'Test',
+  //   email:'email@test.com'
+  // };
+
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -28,12 +34,13 @@ function Login() {
       if (response.data.success) {
         // Store user data in localStorage or context if needed
         localStorage.setItem('user', JSON.stringify(response.data.data));
-        navigate('/dashboard'); // Navigate to dashboard or home page
+        // navigate(`/dashboard/${username}`);
+        const userData = {username:username,access_level:response.data.data.access_level};
+        navigate('/dashboard',{ state: userData}); // Navigate to dashboard or home page
       } else {
         alert('Invalid credentials');
       }
     } catch (err) {
-      console.error('Login error:', err);
       alert('Login failed. Please try again.');
     }
   };
@@ -59,7 +66,6 @@ function Login() {
 
   return (
     <div>
-      <h1> ANother testing </h1>
       <form onSubmit={handleSubmit}>
       <div className="login-box">
         <div className="login-header">
