@@ -1,18 +1,24 @@
 {
-  "name": "backend",
+  "name": "busters-backend",
   "version": "1.0.0",
-  "description": "\"# Backend Stuffs here\"",
+  "description": "Backend for Busters application",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "node index.js"
+    "start": "node index.js",
+    "dev": "nodemon index.js",
+    "seed:daily-main": "node scripts/seedDailyMain.js",
+    "seed:yesterday-daily": "node scripts/seedYesterdayDailyMain.js"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "bcrypt": "^5.1.0",
     "cors": "^2.8.5",
-    "dotenv": "^16.4.7",
-    "express": "^4.21.2",
-    "pg": "^8.14.1"
+    "express": "^4.18.2",
+    "nodemon": "^2.0.22",
+    "pg": "^8.11.0"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.22"
   }
 }
