@@ -6,6 +6,8 @@ const db = require('./models/db');
 const { verifyUser } = require('./modules/authentication');
 const StoreBranch = require('./models/StoreBranch');
 const User = require('./models/User');
+const DailyMain = require('./models/DailyMain');
+const DriverReport = require('./models/DriverReport');
 
 // Middleware
 app.use(express.json());
@@ -174,6 +176,33 @@ app.get('/api/users', async (req, res) => {
   }
 });
 
+// Get user by ID route
+app.get('/api/users/:userId', async (req, res) => {
+  try {
+    const userId = req.params.userId;
+    const user = await User.findById(userId);
+    
+    res.json({
+      success: true,
+      data: user
+    });
+  } catch (error) {
+    console.error('Error fetching user:', error);
+    
+    if (error.message === 'User not found') {
+      return res.status(404).json({
+        success: false,
+        error: 'User not found'
+      });
+    }
+    
+    res.status(500).json({
+      success: false,
+      error: 'Failed to fetch user'
+    });
+  }
+});
+
 // Branches route
 // Route to get all store branches
 app.get('/branches', async (req, res) => {
@@ -196,7 +225,7 @@ app.get('/branches', async (req, res) => {
 // Authentication route
 app.post('/login', async (req, res) => {
   const { username, password } = req.body;
-  let retval = -1;
+  let retval = { user_id: -1, access_level: -1 };
   if (!username || !password) {
     return res.status(400).json({ 
       success: false, 
@@ -212,9 +241,9 @@ app.post('/login', async (req, res) => {
     //   [username, password]
     // );
 
-    retval = await verifyUser(username,password);
+    retval = await verifyUser(username, password);
     console.log(retval);
-    if (retval === -1) {
+    if (retval.user_id === -1) {
       return res.status(401).json({
         success: false,
         error: 'Invalid credentials'
@@ -224,8 +253,10 @@ app.post('/login', async (req, res) => {
     // Successful authentication
     res.json({
       success: true,
-      data: {'username':username,
-       'access_level':retval 
+      data: {
+        'username': username,
+        'user_id': retval.user_id,
+        'access_level': retval.access_level
       }
     });
 
@@ -390,6 +421,370 @@ app.delete('/api/users/:userId', async (req, res) => {
     res.status(500).json({
       success: false,
       error: 'Failed to delete user'
+    });
+  }
+});
+
+// Daily Main routes
+// Get all daily main records
+app.get('/api/daily-main', async (req, res) => {
+  try {
+    const dailyMainRecords = await DailyMain.findAll();
+    res.json({
+      success: true,
+      data: dailyMainRecords
+    });
+  } catch (error) {
+    console.error('Error fetching daily main records:', error);
+    res.status(500).json({
+      success: false,
+      error: 'Failed to fetch daily main records'
+    });
+  }
+});
+
+// Get daily main records by store ID
+app.get('/api/daily-main/by-store/:store_id', async (req, res) => {
+  try {
+    const storeId = req.params.store_id;
+    console.log(`storeId: ${storeId}`);
+    const dailyMainRecords = await DailyMain.findByStoreId(storeId);
+    
+    res.json({
+      success: true,
+      data: dailyMainRecords
+    });
+  } catch (error) {
+    console.error('Error fetching daily main records by store ID:', error);
+    res.status(500).json({
+      success: false,
+      error: 'Failed to fetch daily main records'
+    });
+  }
+});
+
+// Get a single daily main record by ID
+app.get('/api/daily-main/:dailyMainId', async (req, res) => {
+  try {
+    const dailyMainId = req.params.dailyMainId;
+    const dailyMainRecord = await DailyMain.findById(dailyMainId);
+    
+    res.json({
+      success: true,
+      data: dailyMainRecord
+    });
+  } catch (error) {
+    console.error('Error fetching daily main record:', error);
+    
+    if (error.message === 'Daily main record not found') {
+      return res.status(404).json({
+        success: false,
+        error: 'Daily main record not found'
+      });
+    }
+    
+    res.status(500).json({
+      success: false,
+      error: 'Failed to fetch daily main record'
+    });
+  }
+});
+
+// Create a new daily main record
+app.post('/api/daily-main', async (req, res) => {
+  try {
+    // Validate required fields if needed
+    // For example:
+    // if (!req.body.store_id || !req.body.date) {
+    //   return res.status(400).json({
+    //     success: false,
+    //     error: 'Store ID and date are required'
+    //   });
+    // }
+    
+    const newDailyMainRecord = await DailyMain.create(req.body);
+    
+    res.status(201).json({
+      success: true,
+      data: newDailyMainRecord
+    });
+  } catch (error) {
+    console.error('Error creating daily main record:', error);
+    res.status(500).json({
+      success: false,
+      error: 'Failed to create daily main record'
+    });
+  }
+});
+
+// Update a daily main record
+app.put('/api/daily-main/:dailyMainId', async (req, res) => {
+  try {
+    const dailyMainId = req.params.dailyMainId;
+    
+    // Validate required fields if needed
+    // For example:
+    // if (!req.body.store_id || !req.body.date) {
+    //   return res.status(400).json({
+    //     success: false,
+    //     error: 'Store ID and date are required'
+    //   });
+    // }
+    
+    const updatedDailyMainRecord = await DailyMain.update(dailyMainId, req.body);
+    
+    res.json({
+      success: true,
+      data: updatedDailyMainRecord
+    });
+  } catch (error) {
+    console.error('Error updating daily main record:', error);
+    
+    if (error.message === 'Daily main record not found') {
+      return res.status(404).json({
+        success: false,
+        error: 'Daily main record not found'
+      });
+    }
+    
+    res.status(500).json({
+      success: false,
+      error: 'Failed to update daily main record'
+    });
+  }
+});
+
+// Delete a daily main record
+app.delete('/api/daily-main/:dailyMainId', async (req, res) => {
+  try {
+    const dailyMainId = req.params.dailyMainId;
+    
+    await DailyMain.delete(dailyMainId);
+    
+    res.json({
+      success: true,
+      message: 'Daily main record deleted successfully'
+    });
+  } catch (error) {
+    console.error('Error deleting daily main record:', error);
+    
+    if (error.message === 'Daily main record not found') {
+      return res.status(404).json({
+        success: false,
+        error: 'Daily main record not found'
+      });
+    }
+    
+    res.status(500).json({
+      success: false,
+      error: 'Failed to delete daily main record'
+    });
+  }
+});
+
+// Weekly Sales Report route
+app.get('/api/weekly-sales-report', async (req, res) => {
+  try {
+    // Get query parameters for date range
+    const { startDate, endDate, storeId } = req.query;
+    
+    // Build the query
+    let query = `
+      SELECT 
+        daily_date,
+        daily_summary,
+        total_daily_drawers,
+        (debit_tips + cash_tips) as total_tips
+      FROM busters.tbDailymain
+      WHERE 1=1
+    `;
+    
+    const queryParams = [];
+    let paramCount = 1;
+    
+    // Add date range filters if provided
+    if (startDate) {
+      query += ` AND daily_date >= $${paramCount}`;
+      queryParams.push(startDate);
+      paramCount++;
+    }
+    
+    if (endDate) {
+      query += ` AND daily_date <= $${paramCount}`;
+      queryParams.push(endDate);
+      paramCount++;
+    }
+    
+    // Add store filter if provided
+    if (storeId) {
+      query += ` AND store_id = $${paramCount}`;
+      queryParams.push(storeId);
+      paramCount++;
+    }
+    
+    // Order by date
+    query += ` ORDER BY daily_date DESC`;
+    
+    // Execute the query
+    const { rows } = await db.query(query, queryParams);
+    
+    res.json({
+      success: true,
+      data: rows
+    });
+  } catch (error) {
+    console.error('Error fetching weekly sales report:', error);
+    res.status(500).json({
+      success: false,
+      error: 'Failed to fetch weekly sales report'
+    });
+  }
+});
+
+// Driver Report routes
+// Get all driver reports
+app.get('/api/driver-reports', async (req, res) => {
+  try {
+    const driverReports = await DriverReport.findAll();
+    res.json({
+      success: true,
+      data: driverReports
+    });
+  } catch (error) {
+    console.error('Error fetching driver reports:', error);
+    res.status(500).json({
+      success: false,
+      error: 'Failed to fetch driver reports'
+    });
+  }
+});
+
+// Get a single driver report by ID
+app.get('/api/driver-reports/:driverReportId', async (req, res) => {
+  try {
+    const driverReportId = req.params.driverReportId;
+    const driverReport = await DriverReport.findById(driverReportId);
+    
+    res.json({
+      success: true,
+      data: driverReport
+    });
+  } catch (error) {
+    console.error('Error fetching driver report:', error);
+    
+    if (error.message === 'Driver report not found') {
+      return res.status(404).json({
+        success: false,
+        error: 'Driver report not found'
+      });
+    }
+    
+    res.status(500).json({
+      success: false,
+      error: 'Failed to fetch driver report'
+    });
+  }
+});
+
+// Get driver reports by driver ID
+app.get('/api/driver-reports/driver/:driverId', async (req, res) => {
+  try {
+    const driverId = req.params.driverId;
+    const driverReports = await DriverReport.findByDriverId(driverId);
+    
+    res.json({
+      success: true,
+      data: driverReports
+    });
+  } catch (error) {
+    console.error('Error fetching driver reports by driver ID:', error);
+    res.status(500).json({
+      success: false,
+      error: 'Failed to fetch driver reports'
+    });
+  }
+});
+
+// Create a new driver report
+app.post('/api/driver-reports', async (req, res) => {
+  try {
+    const driverReportData = req.body;
+    
+    // Validate required fields
+    if (!driverReportData.driver_id || !driverReportData.trans_date) {
+      return res.status(400).json({
+        success: false,
+        error: 'Driver ID and transaction date are required'
+      });
+    }
+    
+    const newDriverReport = await DriverReport.create(driverReportData);
+    
+    res.status(201).json({
+      success: true,
+      data: newDriverReport
+    });
+  } catch (error) {
+    console.error('Error creating driver report:', error);
+    res.status(500).json({
+      success: false,
+      error: 'Failed to create driver report'
+    });
+  }
+});
+
+// Update a driver report
+app.put('/api/driver-reports/:driverReportId', async (req, res) => {
+  try {
+    const driverReportId = req.params.driverReportId;
+    const driverReportData = req.body;
+    
+    const updatedDriverReport = await DriverReport.update(driverReportId, driverReportData);
+    
+    res.json({
+      success: true,
+      data: updatedDriverReport
+    });
+  } catch (error) {
+    console.error('Error updating driver report:', error);
+    
+    if (error.message === 'Driver report not found') {
+      return res.status(404).json({
+        success: false,
+        error: 'Driver report not found'
+      });
+    }
+    
+    res.status(500).json({
+      success: false,
+      error: 'Failed to update driver report'
+    });
+  }
+});
+
+// Delete a driver report
+app.delete('/api/driver-reports/:driverReportId', async (req, res) => {
+  try {
+    const driverReportId = req.params.driverReportId;
+    await DriverReport.delete(driverReportId);
+    
+    res.json({
+      success: true,
+      message: 'Driver report deleted successfully'
+    });
+  } catch (error) {
+    console.error('Error deleting driver report:', error);
+    
+    if (error.message === 'Driver report not found') {
+      return res.status(404).json({
+        success: false,
+        error: 'Driver report not found'
+      });
+    }
+    
+    res.status(500).json({
+      success: false,
+      error: 'Failed to delete driver report'
     });
   }
 });

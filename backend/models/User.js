@@ -16,6 +16,26 @@ class User {
     }
   }
 
+  static async findById(userId) {
+    try {
+      const query = `
+        SELECT user_id, username, firstname, lastname, email, phone, access_level
+        FROM busters.users
+        WHERE user_id = $1
+      `;
+      const { rows } = await db.query(query, [userId]);
+      
+      if (rows.length === 0) {
+        throw new Error('User not found');
+      }
+      
+      return rows[0];
+    } catch (error) {
+      console.error('Error in User.findById:', error);
+      throw error;
+    }
+  }
+
   static async create(userData) {
     try {
       const { username, password, firstname, lastname, email, phone, access_level } = userData;
